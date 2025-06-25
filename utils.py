@@ -1,21 +1,13 @@
-import openai
-import os
-from dotenv import load_dotenv
+from transformers import pipeline
 import pandas as pd
 
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Load local model for Q&A (offline or internet-based, no key)
+qa_model = pipeline("text-generation", model="gpt2")
 
 def init_granite_model():
     def model(prompt):
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a helpful healthcare assistant."},
-                {"role": "user", "content": prompt}
-            ]
-        )
-        return response.choices[0].message['content']
+        result = qa_model(prompt, max_length=100, num_return_sequences=1)
+        return result[0]['generated_text']
     return model
 
 def get_sample_patient_data():
