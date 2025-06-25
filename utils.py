@@ -1,6 +1,10 @@
 import openai
+import os
+from dotenv import load_dotenv
+import pandas as pd
 
-openai.api_key = "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"
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def init_granite_model():
     def model(prompt):
@@ -15,7 +19,6 @@ def init_granite_model():
     return model
 
 def get_sample_patient_data():
-    import pandas as pd
     data = {
         "Name": ["Ravi", "Priya", "Amit", "Kiran", "Sneha"],
         "Age": [28, 34, 45, 23, 37],
