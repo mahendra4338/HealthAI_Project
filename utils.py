@@ -1,27 +1,21 @@
-import os
-from dotenv import load_dotenv
 import openai
-import pandas as pd
 
-# Load environment variables
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = "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"
 
-# Initialize Granite model using OpenAI ChatCompletion
 def init_granite_model():
     def model(prompt):
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # You can change to "gpt-4" if allowed
+            model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a helpful and intelligent healthcare assistant."},
+                {"role": "system", "content": "You are a helpful healthcare assistant."},
                 {"role": "user", "content": prompt}
             ]
         )
         return response.choices[0].message['content']
     return model
 
-# Dummy patient data
 def get_sample_patient_data():
+    import pandas as pd
     data = {
         "Name": ["Ravi", "Priya", "Amit", "Kiran", "Sneha"],
         "Age": [28, 34, 45, 23, 37],
@@ -31,7 +25,6 @@ def get_sample_patient_data():
     }
     return pd.DataFrame(data)
 
-# Function to fetch patient profile from name
 def get_patient_profile(name):
     df = get_sample_patient_data()
     profile = df[df["Name"].str.lower() == name.lower()]
