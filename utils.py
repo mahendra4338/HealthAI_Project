@@ -1,44 +1,46 @@
-# utils.py (DUMMY VERSION)
+import openai
+import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+import os
+from dotenv import load_dotenv
 
-# A simple dummy model class that just echoes back a canned response
-class DummyModel:
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+class OpenAIModel:
     def generate_text(self, prompt: str) -> str:
-        # You can customize responses here or make random ones
-        return "⚕️ [Dummy Response] This is a placeholder answer for:\n\n" + prompt[:100] + "..."
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful and honest medical assistant."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=250,
+                temperature=0.7
+            )
+            return response['choices'][0]['message']['content']
+        except Exception as e:
+            return f"⚠️ Error generating response: {e}"
 
 def init_granite_model():
-    """
-    Dummy init function. Returns a DummyModel that simulates
-    the Granite AI model for local testing without real API.
-    """
-    return DummyModel()
+    return OpenAIModel()
 
 def get_sample_patient_data():
-    """
-    Generates and returns sample patient health metrics.
-    """
-    import pandas as pd
-    import numpy as np
-    from datetime import datetime, timedelta
-
     data = []
     start_date = datetime.now() - timedelta(days=30)
     for i in range(30):
         date = start_date + timedelta(days=i)
-        # random but consistent-looking vitals
         heart_rate = int(np.random.normal(70, 5))
         systolic_bp = int(np.random.normal(120, 8))
         diastolic_bp = int(np.random.normal(80, 5))
         blood_glucose = int(np.random.normal(95, 10))
         data.append([date, heart_rate, systolic_bp, diastolic_bp, blood_glucose])
-
     df = pd.DataFrame(data, columns=['Date', 'Heart Rate', 'Systolic BP', 'Diastolic BP', 'Blood Glucose'])
     return df
 
 def get_patient_profile():
-    """
-    Returns a sample patient profile.
-    """
     return {
         "age": 35,
         "gender": "Female",
