@@ -110,8 +110,20 @@ elif current_view == "Treatment Plans":
 
 # Health Analytics
 elif current_view == "Health Analytics":
-    st.subheader("Health Data Dashboard")
-    data = get_sample_patient_data(30)
-    st.line_chart(data.set_index("Date"))
-    st.write("Recent readings:")
-    st.dataframe(data.tail(7).style.format("{:.1f}"))
+    st.subheader("📊 Health Data Analytics")
+    df = get_sample_patient_data(30)
+
+    # Show chart
+    st.line_chart(df.set_index("Date"))
+
+    # Show last 7 rows with correct formatting (exclude Date from formatting)
+    st.markdown("### Recent readings:")
+    st.dataframe(
+        df.tail(7).style.format({
+            "Heart Rate": "{:.1f}",
+            "Systolic BP": "{:.1f}",
+            "Diastolic BP": "{:.1f}",
+            "Blood Glucose": "{:.1f}"
+        })
+    )
+
