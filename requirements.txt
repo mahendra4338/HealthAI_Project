@@ -1,5 +1,4 @@
 streamlit
-pandas
 plotly
-transformers
-torch
+pandas
+numpy
