@@ -58,9 +58,4 @@ elif choice == "Health Analytics":
     delta = latest - df[metric].iloc[-2]
     st.metric(label=f"Latest {metric}", value=latest, delta=f"{delta:.1f}")
     st.markdown(f"**Average {metric}:** {df[metric].mean():.2f}")
-    # --- Project Links ---
-st.markdown("---")
-st.markdown("### 🔗 Project Links")
-st.markdown("[🌐 Open App in Browser](https://healthaiproject-9zncftohtgbtxnwcvrkdss.streamlit.app)", unsafe_allow_html=True)
-st.markdown("[💻 View on GitHub](https://github.com/mahendra4338/HealthAI_Project)", unsafe_allow_html=True)
-
+    
