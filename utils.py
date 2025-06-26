@@ -45,3 +45,7 @@ def generate_treatment_plan(condition):
         return "🩺 Plan:\n- Inhaler (Salbutamol)\n- Avoid cold/dust\n- Monitor with peak flow meter"
     else:
         return "⚠️ No specific plan found. Consult a doctor."
+ --- Project Links (For Reference) ---
+App Link: https://healthaiproject-9zncftohtgbtxnwcvrkdss.streamlit.app
+GitHub: https://github.com/mahendra4338/HealthAI_Project
+
