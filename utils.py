@@ -1,28 +1,66 @@
-from transformers import pipeline
-import pandas as pd
+import os
+from ibm_watson_machine_learning.foundation_models import Model
+import streamlit as st
+from dotenv import load_dotenv
 
-# Load local model for Q&A (offline or internet-based, no key)
-qa_model = pipeline("text-generation", model="gpt2")
+# Load environment variables from .env file
+load_dotenv()
 
 def init_granite_model():
-    def model(prompt):
-        result = qa_model(prompt, max_length=100, num_return_sequences=1)
-        return result[0]['generated_text']
+    """
+    Initializes and returns the IBM Granite 13B Instruct v2 model.
+    """
+    api_key = os.getenv("IBM_WATSON_ML_API_KEY")
+    url = os.getenv("IBM_WATSON_ML_URL")
+    project_id = os.getenv("IBM_WATSON_ML_PROJECT_ID")
+
+    if not api_key or not url or not project_id:
+        raise ValueError("IBM_WATSON_ML_API_KEY, IBM_WATSON_ML_URL, and IBM_WATSON_ML_PROJECT_ID must be set in .env file.")
+
+    model_id = "ibm/granite-13b-instruct-v2"
+
+    gen_parms = {
+        "max_new_tokens": 500,
+        "min_new_tokens": 50,
+        "temperature": 0.2,
+        "repetition_penalty": 1.0
+    }
+
+    model = Model(
+        model_id=model_id,
+        credentials={"apikey": api_key, "url": url},
+        project_id=project_id,
+        params=gen_parms
+    )
     return model
 
 def get_sample_patient_data():
-    data = {
-        "Name": ["Ravi", "Priya", "Amit", "Kiran", "Sneha"],
-        "Age": [28, 34, 45, 23, 37],
-        "Gender": ["Male", "Female", "Male", "Male", "Female"],
-        "Diagnosis": ["Flu", "Diabetes", "Hypertension", "Anxiety", "Asthma"],
-        "Last Visit": pd.to_datetime(["2024-12-12", "2025-02-10", "2025-04-05", "2025-06-01", "2025-05-22"])
-    }
-    return pd.DataFrame(data)
+    """
+    Generates and returns sample patient health metrics.
+    """
+    import pandas as pd
+    import numpy as np
+    from datetime import datetime, timedelta
 
-def get_patient_profile(name):
-    df = get_sample_patient_data()
-    profile = df[df["Name"].str.lower() == name.lower()]
-    if profile.empty:
-        return None
-    return profile.to_dict(orient="records")[0]
+    data = []
+    start_date = datetime.now() - timedelta(days=30)
+    for i in range(30):
+        date = start_date + timedelta(days=i)
+        heart_rate = int(np.random.normal(70, 5))
+        systolic_bp = int(np.random.normal(120, 8))
+        diastolic_bp = int(np.random.normal(80, 5))
+        blood_glucose = int(np.random.normal(95, 10))
+        data.append([date, heart_rate, systolic_bp, diastolic_bp, blood_glucose])
+
+    df = pd.DataFrame(data, columns=['Date', 'Heart Rate', 'Systolic BP', 'Diastolic BP', 'Blood Glucose'])
+    return df
+
+def get_patient_profile():
+    """
+    Returns a sample patient profile.
+    """
+    return {
+        "age": 35,
+        "gender": "Female",
+        "medical_history": "No significant medical history, occasional seasonal allergies."
+    }
