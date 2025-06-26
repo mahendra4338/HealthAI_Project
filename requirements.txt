@@ -2,3 +2,6 @@ streamlit
 plotly
 pandas
 numpy
+# Project Links
+# App: https://healthaiproject-9zncftohtgbtxnwcvrkdss.streamlit.app
+# GitHub: https://github.com/mahendra4338/HealthAI_Project
